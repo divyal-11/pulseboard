@@ -38,21 +38,45 @@
 ---
 
 ## Architecture
+
 ```text
-Browser
-├── Zustand (live metrics, alerts, UI state)
-├── TanStack Query (alerts CRUD, services list)
-└── Recharts (live-updating charts)
-│
-├── WebSocket (metrics every 1s, alerts every 10s)
-└── REST API (alerts CRUD, services, host metrics)
-│
-Node.js Server
-├── WebSocket Server (ws)
-├── Express REST API
-├── Data Generator (metric walk algorithm)
-└── systeminformation (real CPU/RAM)
+┌─────────────────────────────────────────────────────────────────┐
+│                        BROWSER (Client)                         │
+│                                                                 │
+│  ┌─────────────┐  ┌──────────────┐  ┌───────────────────────┐   │
+│  │   Zustand   │  │ TanStack     │  │   Recharts            │   │
+│  │   Store     │  │ Query Cache  │  │   (Live Charts)       │   │
+│  │             │  │              │  │                       │   │
+│  │ - alerts[]  │  │ - /alerts    │  │ - CPU area chart      │   │
+│  │ - services[]│  │ - /services  │  │ - Memory line chart   │   │
+│  │ - metrics{} │  │              │  │                       │   │
+│  └──────┬──────┘  └──────┬───────┘  └───────────────────────┘   │
+│         │                │                                      │
+│         └────────────────┴──────────────────┐                   │
+│                                             │                   │
+│  ┌──────────────────────────────────────────┴─────────────┐     │
+│  │              Next.js App Router (Port 3000)            │     │
+│  └───────────────────────────┬────────────────────────────┘     │
+└──────────────────────────────┼──────────────────────────────────┘
+                               │
+               ┌───────────────┴──────────────────┐
+               │                                  │
+               │ WebSocket (ws://)                │ HTTP REST
+               │ Live metrics every 1s            │ Alerts CRUD
+               ▼                                  ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  Node.js Server (Port 4000)                     │
+│                                                                 │
+│  ┌─────────────────────┐          ┌──────────────────────────┐  │
+│  │   WebSocket Server  │          │      Express REST API    │  │
+│  └─────────────────────┘          └──────────────────────────┘  │
+│                                                                 │
+│  ┌──────────────────────────────────────────────────────────┐  │
+│  │                    In-Memory Data Store                  │  │
+│  └──────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────┘
 ```
+
 
 
 ---
