@@ -77,7 +77,7 @@ export function MemoryChart() {
                   contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
                   itemStyle={{ color: '#8B5CF6' }}
                   labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
-                  formatter={(value: number) => [`${value}%`, 'Avg Memory']}
+                  formatter={(value) => [`${value}%`, 'Avg Memory']}
                   labelFormatter={(label) => `Time: ${label}`}
                   isAnimationActive={false}
                 />

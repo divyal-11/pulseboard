@@ -29,7 +29,7 @@ export function AlertFilters({
     <div className="flex flex-wrap gap-4 items-center bg-[#111827] border border-[#1F2937] p-4 rounded-md mb-6">
       <div className="flex items-center gap-3">
         <span className="text-sm text-gray-400 font-medium">Severity</span>
-        <Select value={severity} onValueChange={setSeverity}>
+        <Select value={severity} onValueChange={(val) => val && setSeverity(val)}>
           <SelectTrigger className="w-[140px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
             <SelectValue placeholder="All" />
           </SelectTrigger>
@@ -44,7 +44,7 @@ export function AlertFilters({
 
       <div className="flex items-center gap-3">
         <span className="text-sm text-gray-400 font-medium">Status</span>
-        <Select value={status} onValueChange={setStatus}>
+        <Select value={status} onValueChange={(val) => val && setStatus(val)}>
           <SelectTrigger className="w-[140px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
             <SelectValue placeholder="All" />
           </SelectTrigger>
@@ -58,7 +58,7 @@ export function AlertFilters({
 
       <div className="flex items-center gap-3">
         <span className="text-sm text-gray-400 font-medium">Service</span>
-        <Select value={serviceId} onValueChange={setServiceId}>
+        <Select value={serviceId} onValueChange={(val) => val && setServiceId(val)}>
           <SelectTrigger className="w-[200px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
             <SelectValue placeholder="All Services" />
           </SelectTrigger>

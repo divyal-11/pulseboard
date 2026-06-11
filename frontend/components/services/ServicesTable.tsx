@@ -5,7 +5,6 @@ import { useUIStore } from '@/store/useUIStore';
 import { StatusBadge } from './StatusBadge';
 import {
   Table,
-  Body,
   TableCell,
   TableHead,
   TableHeader,

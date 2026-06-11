@@ -109,7 +109,7 @@ export function ServiceDrawer() {
                         <Tooltip 
                           contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
                           itemStyle={{ color: '#3B82F6' }} labelStyle={{ color: '#9CA3AF' }}
-                          formatter={(v: number) => [`${v}%`, 'CPU']}
+                          formatter={(v) => [`${v}%`, 'CPU']}
                           isAnimationActive={false}
                         />
                         <Area type="monotone" dataKey="cpu" stroke="#3B82F6" strokeWidth={2} fillOpacity={1} fill="url(#serviceCpu)" isAnimationActive={false} />
@@ -140,7 +140,7 @@ export function ServiceDrawer() {
                         <Tooltip 
                           contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
                           itemStyle={{ color: '#8B5CF6' }} labelStyle={{ color: '#9CA3AF' }}
-                          formatter={(v: number) => [`${v}%`, 'Memory']}
+                          formatter={(v) => [`${v}%`, 'Memory']}
                           isAnimationActive={false}
                         />
                         <Area type="monotone" dataKey="memory" stroke="#8B5CF6" strokeWidth={2} fillOpacity={1} fill="url(#serviceMem)" isAnimationActive={false} />

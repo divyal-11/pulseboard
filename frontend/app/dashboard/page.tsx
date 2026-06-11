@@ -14,9 +14,9 @@ export default function DashboardPage() {
 
   // Derive sparkline data (last 10 points) for the stat cards by aggregating across services
   // CPU Sparkline
-  const cpuSparkline = [];
-  const memSparkline = [];
-  const rpsSparkline = [];
+  const cpuSparkline: number[] = [];
+  const memSparkline: number[] = [];
+  const rpsSparkline: number[] = [];
   
   // Quick aggregation for sparklines
   const timestamps = new Set<number>();

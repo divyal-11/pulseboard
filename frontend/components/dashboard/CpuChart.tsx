@@ -78,7 +78,7 @@ export function CpuChart() {
                   contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
                   itemStyle={{ color: '#3B82F6' }}
                   labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
-                  formatter={(value: number) => [`${value}%`, 'Avg CPU']}
+                  formatter={(value) => [`${value}%`, 'Avg CPU']}
                   labelFormatter={(label) => `Time: ${label}`}
                   isAnimationActive={false}
                 />
