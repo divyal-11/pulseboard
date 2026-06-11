@@ -1,0 +1,75 @@
+'use client';
+
+import { useServices } from '@/hooks/useServices';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+interface AlertFiltersProps {
+  severity: string;
+  setSeverity: (val: string) => void;
+  status: string;
+  setStatus: (val: string) => void;
+  serviceId: string;
+  setServiceId: (val: string) => void;
+}
+
+export function AlertFilters({
+  severity, setSeverity,
+  status, setStatus,
+  serviceId, setServiceId
+}: AlertFiltersProps) {
+  const { data: servicesData } = useServices();
+
+  return (
+    <div className="flex flex-wrap gap-4 items-center bg-[#111827] border border-[#1F2937] p-4 rounded-md mb-6">
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-gray-400 font-medium">Severity</span>
+        <Select value={severity} onValueChange={setSeverity}>
+          <SelectTrigger className="w-[140px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
+            <SelectValue placeholder="All" />
+          </SelectTrigger>
+          <SelectContent className="bg-[#111827] border-[#1F2937] text-gray-200">
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="critical">Critical</SelectItem>
+            <SelectItem value="warning">Warning</SelectItem>
+            <SelectItem value="info">Info</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-gray-400 font-medium">Status</span>
+        <Select value={status} onValueChange={setStatus}>
+          <SelectTrigger className="w-[140px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
+            <SelectValue placeholder="All" />
+          </SelectTrigger>
+          <SelectContent className="bg-[#111827] border-[#1F2937] text-gray-200">
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="active">Active</SelectItem>
+            <SelectItem value="resolved">Resolved</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="flex items-center gap-3">
+        <span className="text-sm text-gray-400 font-medium">Service</span>
+        <Select value={serviceId} onValueChange={setServiceId}>
+          <SelectTrigger className="w-[200px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
+            <SelectValue placeholder="All Services" />
+          </SelectTrigger>
+          <SelectContent className="bg-[#111827] border-[#1F2937] text-gray-200">
+            <SelectItem value="all">All Services</SelectItem>
+            {servicesData?.data.map(s => (
+              <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+    </div>
+  );
+}
