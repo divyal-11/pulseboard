@@ -26,14 +26,14 @@ export function AlertFilters({
   const { data: servicesData } = useServices();
 
   return (
-    <div className="flex flex-wrap gap-4 items-center bg-[#111827] border border-[#1F2937] p-4 rounded-md mb-6">
+    <div className="flex flex-wrap gap-4 items-center bg-card border border-border p-4 rounded-lg mb-6 transition-colors duration-300">
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-400 font-medium">Severity</span>
+        <span className="text-sm text-muted-foreground font-medium">Severity</span>
         <Select value={severity} onValueChange={(val) => val && setSeverity(val)}>
-          <SelectTrigger className="w-[140px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
+          <SelectTrigger className="w-[140px] bg-background border-border text-foreground">
             <SelectValue placeholder="All" />
           </SelectTrigger>
-          <SelectContent className="bg-[#111827] border-[#1F2937] text-gray-200">
+          <SelectContent className="bg-popover border-border text-popover-foreground">
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="critical">Critical</SelectItem>
             <SelectItem value="warning">Warning</SelectItem>
@@ -43,12 +43,12 @@ export function AlertFilters({
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-400 font-medium">Status</span>
+        <span className="text-sm text-muted-foreground font-medium">Status</span>
         <Select value={status} onValueChange={(val) => val && setStatus(val)}>
-          <SelectTrigger className="w-[140px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
+          <SelectTrigger className="w-[140px] bg-background border-border text-foreground">
             <SelectValue placeholder="All" />
           </SelectTrigger>
-          <SelectContent className="bg-[#111827] border-[#1F2937] text-gray-200">
+          <SelectContent className="bg-popover border-border text-popover-foreground">
             <SelectItem value="all">All</SelectItem>
             <SelectItem value="active">Active</SelectItem>
             <SelectItem value="resolved">Resolved</SelectItem>
@@ -57,12 +57,12 @@ export function AlertFilters({
       </div>
 
       <div className="flex items-center gap-3">
-        <span className="text-sm text-gray-400 font-medium">Service</span>
+        <span className="text-sm text-muted-foreground font-medium">Service</span>
         <Select value={serviceId} onValueChange={(val) => val && setServiceId(val)}>
-          <SelectTrigger className="w-[200px] bg-[#0A0F1E] border-[#1F2937] text-gray-200">
+          <SelectTrigger className="w-[200px] bg-background border-border text-foreground">
             <SelectValue placeholder="All Services" />
           </SelectTrigger>
-          <SelectContent className="bg-[#111827] border-[#1F2937] text-gray-200">
+          <SelectContent className="bg-popover border-border text-popover-foreground">
             <SelectItem value="all">All Services</SelectItem>
             {servicesData?.data.map(s => (
               <SelectItem key={s.id} value={s.id}>{s.name}</SelectItem>

@@ -21,29 +21,29 @@ export function ServicesTable() {
   if (isLoading) {
     return (
       <div className="space-y-3">
-        <Skeleton className="h-10 w-full bg-[#1F2937]" />
-        <Skeleton className="h-16 w-full bg-[#1F2937]" />
-        <Skeleton className="h-16 w-full bg-[#1F2937]" />
-        <Skeleton className="h-16 w-full bg-[#1F2937]" />
+        <Skeleton className="h-10 w-full" />
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-16 w-full" />
+        <Skeleton className="h-16 w-full" />
       </div>
     );
   }
 
   if (error || !data) {
-    return <div className="text-red-400 p-4">Error loading services.</div>;
+    return <div className="text-destructive p-4">Error loading services.</div>;
   }
 
   return (
-    <div className="rounded-md border border-[#1F2937] bg-[#111827] overflow-hidden">
+    <div className="rounded-lg border border-border bg-card overflow-hidden transition-colors duration-300">
       <Table>
-        <TableHeader className="bg-[#0A0F1E]">
-          <TableRow className="border-[#1F2937] hover:bg-transparent">
-            <TableHead className="text-gray-400 font-medium h-12">Service</TableHead>
-            <TableHead className="text-gray-400 font-medium h-12">Status</TableHead>
-            <TableHead className="text-gray-400 font-medium h-12">Latency</TableHead>
-            <TableHead className="text-gray-400 font-medium h-12">Requests/sec</TableHead>
-            <TableHead className="text-gray-400 font-medium h-12">Error Rate</TableHead>
-            <TableHead className="text-gray-400 font-medium h-12">Region</TableHead>
+        <TableHeader>
+          <TableRow className="border-border hover:bg-transparent">
+            <TableHead className="text-muted-foreground font-medium h-12">Service</TableHead>
+            <TableHead className="text-muted-foreground font-medium h-12">Status</TableHead>
+            <TableHead className="text-muted-foreground font-medium h-12">Latency</TableHead>
+            <TableHead className="text-muted-foreground font-medium h-12">Requests/sec</TableHead>
+            <TableHead className="text-muted-foreground font-medium h-12">Error Rate</TableHead>
+            <TableHead className="text-muted-foreground font-medium h-12">Region</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -51,22 +51,22 @@ export function ServicesTable() {
             <TableRow 
               key={service.id}
               onClick={() => openDrawer(service.id)}
-              className="border-[#1F2937] hover:bg-[#1F2937]/50 cursor-pointer transition-colors"
+              className="border-border hover:bg-accent/50 cursor-pointer transition-colors"
             >
-              <TableCell className="font-medium text-white">{service.name}</TableCell>
+              <TableCell className="font-medium text-foreground">{service.name}</TableCell>
               <TableCell>
                 <StatusBadge status={service.status} />
               </TableCell>
-              <TableCell className={cn("font-mono", service.latency > 200 ? "text-red-400" : "text-gray-300")}>
+              <TableCell className={cn("font-mono", service.latency > 200 ? "text-red-500" : "text-muted-foreground")}>
                 {service.status === 'down' ? '---' : `${service.latency}ms`}
               </TableCell>
-              <TableCell className="font-mono text-gray-300">
+              <TableCell className="font-mono text-muted-foreground">
                 {service.requestsPerSec.toLocaleString()}/s
               </TableCell>
-              <TableCell className={cn("font-mono", service.errorRate > 5 ? "text-red-400" : "text-gray-300")}>
+              <TableCell className={cn("font-mono", service.errorRate > 5 ? "text-red-500" : "text-muted-foreground")}>
                 {service.errorRate}%
               </TableCell>
-              <TableCell className="text-gray-400 text-sm">
+              <TableCell className="text-muted-foreground text-sm">
                 {service.region}
               </TableCell>
             </TableRow>

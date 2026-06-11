@@ -22,7 +22,6 @@ export function ServiceDrawer() {
 
   const chartData = useMemo(() => {
     if (!selectedServiceId || !history[selectedServiceId]) return [];
-    
     return history[selectedServiceId].map(pt => ({
       ...pt,
       timeLabel: `-${Math.round((Date.now() - pt.timestamp) / 1000)}s`
@@ -33,19 +32,19 @@ export function ServiceDrawer() {
 
   return (
     <Drawer open={drawerOpen} onOpenChange={(open) => !open && closeDrawer()} direction="right">
-      <DrawerContent className="h-screen top-0 right-0 left-auto mt-0 w-[400px] sm:w-[540px] rounded-none bg-[#0A0F1E] border-l border-[#1F2937]">
+      <DrawerContent className="h-screen top-0 right-0 left-auto mt-0 w-[400px] sm:w-[540px] rounded-none bg-background border-l border-border transition-colors duration-300">
         <div className="flex flex-col h-full overflow-y-auto custom-scrollbar">
           
-          <DrawerHeader className="border-b border-[#1F2937] px-6 py-4 flex flex-row items-center justify-between sticky top-0 bg-[#0A0F1E] z-10">
+          <DrawerHeader className="border-b border-border px-6 py-4 flex flex-row items-center justify-between sticky top-0 bg-background z-10">
             <div className="flex flex-col gap-1 text-left">
-              <DrawerTitle className="text-xl font-bold text-white flex items-center gap-3">
+              <DrawerTitle className="text-xl font-bold text-foreground flex items-center gap-3">
                 {service.name}
                 <StatusBadge status={service.status} />
               </DrawerTitle>
-              <span className="text-xs text-gray-400 font-mono">{service.id}</span>
+              <span className="text-xs text-muted-foreground font-mono">{service.id}</span>
             </div>
             <DrawerClose asChild>
-              <Button variant="ghost" size="icon" className="text-gray-400 hover:text-white hover:bg-[#1F2937]">
+              <Button variant="ghost" size="icon" className="text-muted-foreground hover:text-foreground hover:bg-accent">
                 <X className="h-5 w-5" />
               </Button>
             </DrawerClose>
@@ -55,33 +54,33 @@ export function ServiceDrawer() {
             
             {/* Metadata Grid */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="bg-[#111827] border border-[#1F2937] rounded-lg p-4">
-                <div className="flex items-center gap-2 text-gray-400 mb-2">
+              <div className="bg-card border border-border rounded-lg p-4 transition-colors duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Globe className="h-4 w-4" />
                   <span className="text-xs uppercase font-semibold">Region</span>
                 </div>
-                <div className="text-lg font-medium text-white">{service.region}</div>
+                <div className="text-lg font-medium text-foreground">{service.region}</div>
               </div>
-              <div className="bg-[#111827] border border-[#1F2937] rounded-lg p-4">
-                <div className="flex items-center gap-2 text-gray-400 mb-2">
+              <div className="bg-card border border-border rounded-lg p-4 transition-colors duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Activity className="h-4 w-4" />
                   <span className="text-xs uppercase font-semibold">Uptime</span>
                 </div>
-                <div className="text-lg font-medium text-white font-mono">{service.uptime}%</div>
+                <div className="text-lg font-medium text-foreground font-mono">{service.uptime}%</div>
               </div>
-              <div className="bg-[#111827] border border-[#1F2937] rounded-lg p-4">
-                <div className="flex items-center gap-2 text-gray-400 mb-2">
+              <div className="bg-card border border-border rounded-lg p-4 transition-colors duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Server className="h-4 w-4" />
                   <span className="text-xs uppercase font-semibold">Latency</span>
                 </div>
-                <div className="text-lg font-medium text-white font-mono">{service.status === 'down' ? '---' : `${service.latency}ms`}</div>
+                <div className="text-lg font-medium text-foreground font-mono">{service.status === 'down' ? '---' : `${service.latency}ms`}</div>
               </div>
-              <div className="bg-[#111827] border border-[#1F2937] rounded-lg p-4">
-                <div className="flex items-center gap-2 text-gray-400 mb-2">
+              <div className="bg-card border border-border rounded-lg p-4 transition-colors duration-300">
+                <div className="flex items-center gap-2 text-muted-foreground mb-2">
                   <Clock className="h-4 w-4" />
                   <span className="text-xs uppercase font-semibold">Last Checked</span>
                 </div>
-                <div className="text-sm font-medium text-white truncate" title={service.lastChecked}>
+                <div className="text-sm font-medium text-foreground truncate" title={service.lastChecked}>
                   {new Date(service.lastChecked).toLocaleTimeString()}
                 </div>
               </div>
@@ -89,10 +88,8 @@ export function ServiceDrawer() {
 
             {/* Charts */}
             <div className="space-y-6">
-              
-              {/* CPU Chart */}
-              <div className="bg-[#111827] border border-[#1F2937] rounded-lg p-4">
-                <h4 className="text-sm font-semibold text-gray-300 mb-4">CPU Usage (60s)</h4>
+              <div className="bg-card border border-border rounded-lg p-4 transition-colors duration-300">
+                <h4 className="text-sm font-semibold text-muted-foreground mb-4">CPU Usage (60s)</h4>
                 <div className="h-[200px] w-full">
                   {chartData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
@@ -103,12 +100,12 @@ export function ServiceDrawer() {
                             <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1F2937" />
-                        <XAxis dataKey="timeLabel" stroke="#4B5563" fontSize={12} tickLine={false} axisLine={false} minTickGap={20} />
-                        <YAxis stroke="#4B5563" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                        <XAxis dataKey="timeLabel" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} minTickGap={20} />
+                        <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
                         <Tooltip 
-                          contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
-                          itemStyle={{ color: '#3B82F6' }} labelStyle={{ color: '#9CA3AF' }}
+                          contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--foreground)', borderRadius: '8px' }}
+                          itemStyle={{ color: '#3B82F6' }} labelStyle={{ color: 'var(--muted-foreground)' }}
                           formatter={(v) => [`${v}%`, 'CPU']}
                           isAnimationActive={false}
                         />
@@ -116,14 +113,13 @@ export function ServiceDrawer() {
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-gray-500 text-sm">No data yet</div>
+                    <div className="h-full flex items-center justify-center text-muted-foreground text-sm">No data yet</div>
                   )}
                 </div>
               </div>
 
-              {/* Memory Chart */}
-              <div className="bg-[#111827] border border-[#1F2937] rounded-lg p-4">
-                <h4 className="text-sm font-semibold text-gray-300 mb-4">Memory Usage (60s)</h4>
+              <div className="bg-card border border-border rounded-lg p-4 transition-colors duration-300">
+                <h4 className="text-sm font-semibold text-muted-foreground mb-4">Memory Usage (60s)</h4>
                 <div className="h-[200px] w-full">
                   {chartData.length > 0 ? (
                     <ResponsiveContainer width="100%" height="100%">
@@ -134,12 +130,12 @@ export function ServiceDrawer() {
                             <stop offset="95%" stopColor="#8B5CF6" stopOpacity={0} />
                           </linearGradient>
                         </defs>
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1F2937" />
-                        <XAxis dataKey="timeLabel" stroke="#4B5563" fontSize={12} tickLine={false} axisLine={false} minTickGap={20} />
-                        <YAxis stroke="#4B5563" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
+                        <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                        <XAxis dataKey="timeLabel" stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} minTickGap={20} />
+                        <YAxis stroke="var(--muted-foreground)" fontSize={12} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
                         <Tooltip 
-                          contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
-                          itemStyle={{ color: '#8B5CF6' }} labelStyle={{ color: '#9CA3AF' }}
+                          contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--foreground)', borderRadius: '8px' }}
+                          itemStyle={{ color: '#8B5CF6' }} labelStyle={{ color: 'var(--muted-foreground)' }}
                           formatter={(v) => [`${v}%`, 'Memory']}
                           isAnimationActive={false}
                         />
@@ -147,11 +143,10 @@ export function ServiceDrawer() {
                       </AreaChart>
                     </ResponsiveContainer>
                   ) : (
-                    <div className="h-full flex items-center justify-center text-gray-500 text-sm">No data yet</div>
+                    <div className="h-full flex items-center justify-center text-muted-foreground text-sm">No data yet</div>
                   )}
                 </div>
               </div>
-
             </div>
 
           </div>
