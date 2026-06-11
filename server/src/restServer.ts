@@ -1,6 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import { SERVICES, alerts, metricsHistory } from './store';
+import { generateAlertForService, getRealMetrics } from './dataGenerator';
+import { broadcast } from './wsServer';
+
+
 
 export function createRestServer() {
   const app = express();
@@ -36,6 +40,36 @@ export function createRestServer() {
     }
     res.json({ data: service, success: true });
   });
+
+  app.post('/api/services/:id/chaos', (req, res) => {
+    const { mode } = req.body as { mode: 'down' | 'degraded' | 'healthy' };
+    const service = SERVICES.find(s => s.id === req.params.id);
+    if (!service) {
+      res.status(404).json({ data: null, success: false, message: 'Service not found' });
+      return;
+    }
+
+    service.status = mode;
+
+    if (mode === 'down' || mode === 'degraded') {
+      const severity = mode === 'down' ? 'critical' : 'warning';
+      const title = mode === 'down' ? 'Chaos Outage Triggered' : 'Chaos Performance Degradation';
+      const description = mode === 'down'
+        ? `Service ${service.name} was manually forced DOWN via Chaos Controls.`
+        : `Service ${service.name} was forced into DEGRADED state via Chaos Controls.`;
+
+      const alert = generateAlertForService(service.id, severity, title, description);
+
+      broadcast({
+        type: 'new_alert',
+        payload: alert,
+        timestamp: Date.now(),
+      });
+    }
+
+    res.json({ data: service, success: true });
+  });
+
 
   // ─── Alerts ────────────────────────────────────────────────────────────────
   app.get('/api/alerts', (req, res) => {
@@ -95,5 +129,15 @@ export function createRestServer() {
     res.json({ data: history, success: true });
   });
 
+  app.get('/api/host', async (_req, res) => {
+    try {
+      const stats = await getRealMetrics();
+      res.json({ success: true, data: stats });
+    } catch (err) {
+      res.status(500).json({ success: false, message: 'Failed to fetch host metrics' });
+    }
+  });
+
   return app;
 }
+

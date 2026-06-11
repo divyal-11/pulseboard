@@ -3,6 +3,17 @@ import { generateMetrics, generateAlert } from './dataGenerator';
 import { WSMessage } from './types';
 import http from 'http';
 
+// Global reference for broadcasting from REST API
+let activeBroadcast: (<T>(message: WSMessage<T>) => void) | null = null;
+
+export function broadcast<T>(message: WSMessage<T>) {
+  if (activeBroadcast) {
+    activeBroadcast(message);
+  } else {
+    console.warn('[WS] Broadcast attempted but WebSocket server is not running.');
+  }
+}
+
 export function createWsServer(server: http.Server) {
   const wss = new WebSocketServer({ server });
   const clients = new Set<WebSocket>();
@@ -19,20 +30,20 @@ export function createWsServer(server: http.Server) {
     ws.on('error', () => clients.delete(ws));
   });
 
-  function broadcast<T>(message: WSMessage<T>) {
+  activeBroadcast = <T>(message: WSMessage<T>) => {
     const data = JSON.stringify(message);
     clients.forEach(client => {
       if (client.readyState === WebSocket.OPEN) {
         client.send(data);
       }
     });
-  }
+  };
 
   // Broadcast metrics every 1 second
-  setInterval(() => {
+  setInterval(async () => {
     broadcast({
       type: 'metrics_update',
-      payload: generateMetrics(),
+      payload: await generateMetrics(),
       timestamp: Date.now(),
     });
   }, 1000);
@@ -50,3 +61,4 @@ export function createWsServer(server: http.Server) {
   console.log('[WS] WebSocket server attached to HTTP server');
   return wss;
 }
+

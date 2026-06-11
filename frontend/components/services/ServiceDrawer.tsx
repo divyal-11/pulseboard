@@ -2,18 +2,21 @@
 
 import { useMemo } from 'react';
 import { useUIStore } from '@/store/useUIStore';
-import { useServices } from '@/hooks/useServices';
+import { useServices, useServiceChaos } from '@/hooks/useServices';
 import { useMetricsStore } from '@/store/useMetricsStore';
 import { StatusBadge } from './StatusBadge';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerClose } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
-import { X, Activity, Server, Clock, Globe } from 'lucide-react';
+import { X, Activity, Server, Clock, Globe, ShieldAlert, Flame, RotateCcw, Loader2 } from 'lucide-react';
+
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 
 export function ServiceDrawer() {
   const { drawerOpen, closeDrawer, selectedServiceId } = useUIStore();
   const { data: servicesData } = useServices();
   const history = useMetricsStore(s => s.metricsHistory);
+  const chaosMutation = useServiceChaos();
+
 
   const service = useMemo(() => {
     if (!servicesData || !selectedServiceId) return null;
@@ -149,7 +152,76 @@ export function ServiceDrawer() {
               </div>
             </div>
 
+            {/* Chaos Controls */}
+            <div className="bg-card border border-border rounded-lg p-4 space-y-4 transition-colors duration-300">
+              <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+                <ShieldAlert className="h-4 w-4 text-destructive" />
+                Chaos Engineering Controls
+              </h4>
+              <p className="text-xs text-muted-foreground">
+                Simulate infrastructure failures to test the real-time alerting pipeline.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Button 
+                  variant="destructive"
+                  className="w-full font-semibold"
+                  disabled={chaosMutation.isPending}
+                  onClick={() => {
+                    const nextMode = service.status === 'down' ? 'healthy' : 'down';
+                    chaosMutation.mutate({ serviceId: service.id, mode: nextMode });
+                  }}
+                >
+                  {chaosMutation.isPending ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Processing
+                    </>
+                  ) : service.status === 'down' ? (
+                    <>
+                      <RotateCcw className="mr-2 h-4 w-4" />
+                      Restore Service
+                    </>
+                  ) : (
+                    <>
+                      <Flame className="mr-2 h-4 w-4" />
+                      Trigger Outage
+                    </>
+                  )}
+                </Button>
+                
+                {service.status !== 'down' && (
+                  <Button 
+                    variant="outline"
+                    className="w-full border-amber-500/30 text-amber-500 hover:bg-amber-500/10 hover:text-amber-400 font-semibold"
+                    disabled={chaosMutation.isPending}
+                    onClick={() => {
+                      const nextMode = service.status === 'degraded' ? 'healthy' : 'degraded';
+                      chaosMutation.mutate({ serviceId: service.id, mode: nextMode });
+                    }}
+                  >
+                    {chaosMutation.isPending ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Processing
+                      </>
+                    ) : service.status === 'degraded' ? (
+                      <>
+                        <RotateCcw className="mr-2 h-4 w-4" />
+                        Restore
+                      </>
+                    ) : (
+                      <>
+                        <ShieldAlert className="mr-2 h-4 w-4" />
+                        Degrade Performance
+                      </>
+                    )}
+                  </Button>
+                )}
+              </div>
+            </div>
+
           </div>
+
         </div>
       </DrawerContent>
     </Drawer>

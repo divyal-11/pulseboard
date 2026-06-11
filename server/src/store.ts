@@ -10,7 +10,9 @@ export const SERVICES: Service[] = [
   { id: 'db-primary',       name: 'DB Primary',        status: 'healthy',  uptime: 99.99, latency: 4,   requestsPerSec: 2100, errorRate: 0.0,  region: 'us-east-1',  lastChecked: new Date().toISOString() },
   { id: 'cache-service',    name: 'Cache Service',     status: 'down',     uptime: 91.20, latency: 999, requestsPerSec: 0,    errorRate: 100,  region: 'us-east-1',  lastChecked: new Date().toISOString() },
   { id: 'search-service',   name: 'Search Service',    status: 'healthy',  uptime: 99.50, latency: 45,  requestsPerSec: 670,  errorRate: 0.3,  region: 'eu-west-1',  lastChecked: new Date().toISOString() },
+  { id: 'host-machine',     name: 'Host Machine',      status: 'healthy',  uptime: 100,   latency: 0,   requestsPerSec: 0,    errorRate: 0.0,  region: 'local',      lastChecked: new Date().toISOString() },
 ];
+
 
 // Seed alerts
 export let alerts: Alert[] = [
