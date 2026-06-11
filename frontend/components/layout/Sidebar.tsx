@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Activity, LayoutDashboard, Server, Bell } from 'lucide-react';
+import { Activity, LayoutDashboard, Server, Bell, Zap } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 export function Sidebar() {
@@ -10,18 +10,24 @@ export function Sidebar() {
 
   const links = [
     { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
-    { name: 'Services', href: '/services', icon: Server },
-    { name: 'Alerts', href: '/alerts', icon: Bell },
+    { name: 'Services',  href: '/services',  icon: Server },
+    { name: 'Alerts',    href: '/alerts',     icon: Bell },
   ];
 
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-[240px] flex-col border-r border-[#1F2937] bg-[#111827] flex">
-      <div className="flex h-14 items-center gap-2 border-b border-[#1F2937] px-6">
-        <Activity className="h-6 w-6 text-blue-500" />
-        <span className="font-bold text-lg tracking-tight text-white">PulseBoard</span>
+    <aside className="fixed left-0 top-0 z-40 h-screen w-[240px] flex flex-col border-r border-border bg-sidebar transition-colors duration-300">
+      {/* Logo */}
+      <div className="flex h-14 items-center gap-3 border-b border-border px-5">
+        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-blue-500 to-violet-600 shadow-md shadow-blue-500/20">
+          <Activity className="h-4 w-4 text-white" />
+        </div>
+        <span className="font-bold text-base tracking-tight text-foreground">
+          PulseBoard
+        </span>
       </div>
 
-      <nav className="flex-1 space-y-1 p-4">
+      {/* Navigation */}
+      <nav className="flex-1 space-y-1 p-3 mt-2">
         {links.map((link) => {
           const isActive = pathname.startsWith(link.href);
           const Icon = link.icon;
@@ -31,18 +37,32 @@ export function Sidebar() {
               key={link.name}
               href={link.href}
               className={cn(
-                'flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium transition-colors',
+                'group flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200',
                 isActive
-                  ? 'bg-blue-500/15 text-blue-400'
-                  : 'text-gray-400 hover:bg-[#1F2937] hover:text-white'
+                  ? 'bg-primary/10 text-primary shadow-sm'
+                  : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
               )}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className={cn(
+                'h-[18px] w-[18px] transition-transform duration-200 group-hover:scale-110',
+                isActive && 'drop-shadow-[0_0_6px_rgba(59,130,246,0.5)]'
+              )} />
               {link.name}
+              {isActive && (
+                <div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary animate-pulse-glow" />
+              )}
             </Link>
           );
         })}
       </nav>
+
+      {/* Footer */}
+      <div className="border-t border-border p-4">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Zap className="h-3 w-3" />
+          <span>v1.0.0 — Live</span>
+        </div>
+      </div>
     </aside>
   );
 }

@@ -1,14 +1,9 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const inter = Inter({
+  variable: "--font-sans",
   subsets: ["latin"],
 });
 
@@ -17,8 +12,8 @@ import { Sidebar } from "@/components/layout/Sidebar";
 import { TopBar } from "@/components/layout/TopBar";
 
 export const metadata: Metadata = {
-  title: "PulseBoard",
-  description: "Real-time infrastructure metrics dashboard",
+  title: "PulseBoard — Real-time Infrastructure Dashboard",
+  description: "Monitor your infrastructure in real-time with PulseBoard.",
 };
 
 export default function RootLayout({
@@ -29,15 +24,16 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased dark`}
+      className={`${inter.variable} h-full antialiased dark`}
+      suppressHydrationWarning
     >
-      <body className="min-h-full bg-[#0A0F1E] text-white overflow-hidden">
+      <body className="min-h-full bg-background text-foreground overflow-hidden transition-colors duration-300">
         <Providers>
           <div className="flex h-screen w-full">
             <Sidebar />
             <div className="flex flex-1 flex-col pl-[240px]">
               <TopBar />
-              <main className="flex-1 overflow-y-auto">
+              <main className="flex-1 overflow-y-auto custom-scrollbar">
                 {children}
               </main>
             </div>

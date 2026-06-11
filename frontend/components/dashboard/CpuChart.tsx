@@ -4,37 +4,28 @@ import { useMemo } from 'react';
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid } from 'recharts';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useMetricsStore } from '@/store/useMetricsStore';
+import { Cpu } from 'lucide-react';
 
 export function CpuChart() {
   const history = useMetricsStore(s => s.metricsHistory);
 
-  // Aggregate average CPU across all services per timestamp
   const data = useMemo(() => {
-    // Collect all unique timestamps
     const timestamps = new Set<number>();
     Object.values(history).forEach(serviceHistory => {
       serviceHistory.forEach(point => timestamps.add(point.timestamp));
     });
 
-    // Sort ascending
     const sortedTimestamps = Array.from(timestamps).sort((a, b) => a - b);
 
-    // Calculate average for each timestamp
     return sortedTimestamps.map(ts => {
       let totalCpu = 0;
       let count = 0;
-
       Object.values(history).forEach(serviceHistory => {
         const point = serviceHistory.find(p => p.timestamp === ts);
-        if (point) {
-          totalCpu += point.cpu;
-          count++;
-        }
+        if (point) { totalCpu += point.cpu; count++; }
       });
-
       return {
         timestamp: ts,
-        // Convert to relative time string, e.g., "-50s"
         timeLabel: `-${Math.round((Date.now() - ts) / 1000)}s`,
         cpu: count > 0 ? Math.round((totalCpu / count) * 10) / 10 : 0
       };
@@ -42,9 +33,12 @@ export function CpuChart() {
   }, [history]);
 
   return (
-    <Card className="bg-[#111827] border-[#1F2937] col-span-1 shadow-md">
+    <Card className="bg-card border-border shadow-sm transition-colors duration-300">
       <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-semibold text-gray-300">CPU Usage (60s)</CardTitle>
+        <CardTitle className="text-sm font-semibold text-muted-foreground flex items-center gap-2">
+          <Cpu className="h-4 w-4 text-blue-500" />
+          CPU Usage (60s)
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="h-[250px] w-full mt-2">
@@ -57,44 +51,21 @@ export function CpuChart() {
                     <stop offset="95%" stopColor="#3B82F6" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#1F2937" />
-                <XAxis 
-                  dataKey="timeLabel" 
-                  stroke="#4B5563" 
-                  fontSize={12} 
-                  tickLine={false} 
-                  axisLine={false}
-                  minTickGap={20}
-                />
-                <YAxis 
-                  stroke="#4B5563" 
-                  fontSize={12} 
-                  tickLine={false} 
-                  axisLine={false} 
-                  domain={[0, 100]}
-                  tickFormatter={(val) => `${val}%`}
-                />
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border)" />
+                <XAxis dataKey="timeLabel" stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} minTickGap={20} />
+                <YAxis stroke="var(--muted-foreground)" fontSize={11} tickLine={false} axisLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
                 <Tooltip 
-                  contentStyle={{ backgroundColor: '#1F2937', borderColor: '#374151', color: '#F9FAFB', borderRadius: '6px' }}
-                  itemStyle={{ color: '#3B82F6' }}
-                  labelStyle={{ color: '#9CA3AF', marginBottom: '4px' }}
+                  contentStyle={{ backgroundColor: 'var(--card)', borderColor: 'var(--border)', color: 'var(--foreground)', borderRadius: '8px', boxShadow: '0 4px 20px rgba(0,0,0,0.15)' }}
+                  itemStyle={{ color: '#3B82F6' }} labelStyle={{ color: 'var(--muted-foreground)' }}
                   formatter={(value) => [`${value}%`, 'Avg CPU']}
                   labelFormatter={(label) => `Time: ${label}`}
                   isAnimationActive={false}
                 />
-                <Area 
-                  type="monotone" 
-                  dataKey="cpu" 
-                  stroke="#3B82F6" 
-                  strokeWidth={2}
-                  fillOpacity={1} 
-                  fill="url(#colorCpu)" 
-                  isAnimationActive={false}
-                />
+                <Area type="monotone" dataKey="cpu" stroke="#3B82F6" strokeWidth={2} fillOpacity={1} fill="url(#colorCpu)" isAnimationActive={false} />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <div className="flex h-full items-center justify-center text-sm text-gray-500">
+            <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
               Waiting for data...
             </div>
           )}
